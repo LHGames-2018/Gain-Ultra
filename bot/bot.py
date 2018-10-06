@@ -37,15 +37,7 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         print(self.mode)
-        try:
-            action= self.do_decision(gameMap)
 
-        # Write your bot here. Use functions from aiHelper to instantiate your actions.
-            if not action:
-                action = create_move_action(self.moves[randint(0, 3)])
-            return action
-        except Exception as e:
-            print(e)
         try:
             if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
                 if self.PlayerInfo.TotalResources > 0:
@@ -79,7 +71,16 @@ class Bot:
         except Exception as e:
             print(e)
 
+        try:
+            action= self.do_decision(gameMap)
 
+        # Write your bot here. Use functions from aiHelper to instantiate your actions.
+            if not action:
+                action = create_move_action(self.moves[randint(0, 3)])
+            return action
+        except Exception as e:
+            print(e)
+            
     def after_turn(self):
         """
         Gets called after executeTurn
