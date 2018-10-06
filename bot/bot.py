@@ -2,8 +2,9 @@ from helper import *
 
 
 class Bot:
+
     def __init__(self):
-        pass
+        movement = self.hardcode_turn()
 
     def before_turn(self, playerInfo):
         """
@@ -32,9 +33,8 @@ class Bot:
         """
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
-        moves = hardcode_turn()
-        for move in moves:
-            return create_move_action(move)
+        move = self.movement.pop(0)
+        return create_move_action(move)
 
     def after_turn(self):
         """
