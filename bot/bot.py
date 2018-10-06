@@ -100,6 +100,7 @@ class Bot:
             else:
                 return self.mine_nearest_resource(gamemap)
         if self.mode[1] == 1:
+
             target = evaluate_target(self.PlayerInfo, visible)
             if target:
                 pos = find_empty_spot(gamemap,self.PlayerInfo, target.Position)
@@ -110,7 +111,7 @@ class Bot:
                     return None
             else:
 
-                return self.go_home(gamemap)
+                return self.mine_nearest_resource(gamemap)
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
         else:
@@ -133,7 +134,7 @@ class Bot:
         for i in range(len(self.moves)):
             tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
             if tile == TileContent.Wall or tile == TileContent.Player:
-                #self.mode = (1,0,0,0
+                #self.mode = (1,0,0,0)
                 return create_attack_action(self.moves[i])
         return None
 
