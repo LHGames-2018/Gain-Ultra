@@ -32,7 +32,7 @@ class Player:
             direction = next_tile - self.Position
             return create_move_action(direction)
         else:
-            return create_move_action(Point(0, 0))
+            return self.go_home(gamemap)
 
     def go_home(self, gamemap):
         print("GOING HOME")
