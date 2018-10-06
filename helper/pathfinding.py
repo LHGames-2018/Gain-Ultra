@@ -20,7 +20,7 @@ def manhattan(point1, point2):
 
 
 def a_star(gamemap, player, target):
-    while abs(target.x - player.Position.x) > 8 or abs(target.y - player.Position.y) > 8:
+    while abs(target.x - player.Position.x) > 10 or abs(target.y - player.Position.y) > 10:
         target.x = (target.x - player.Position.x) / 2 + player.Position.x
         target.y = (target.y - player.Position.y) / 2 + player.Position.y
     current = Node(player.Position)
@@ -29,7 +29,7 @@ def a_star(gamemap, player, target):
     openset.add(current)
 
     while openset:
-        if len(openset) > 500:
+        if len(openset) > 600:
             break
         current = min(openset, key=lambda o: o.G + o.H)
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
