@@ -106,7 +106,7 @@ class Bot:
                 if emptyres:
                     return self.move_to(gamemap, emptyres)
                 else:
-                    return self.mine_nearest_resource(gamemap, index + 1)
+                    return None
         else:
             return self.go_home(gamemap)
 
