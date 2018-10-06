@@ -109,7 +109,7 @@ class Bot:
                     self.mode=(1,0,0,0)
                     return None
             else:
-                mode = (1,0,0,0)
+                self.mode = (1,0,0,0)
                 return self.mine_nearest_resource(gamemap)
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
