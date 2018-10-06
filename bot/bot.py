@@ -12,7 +12,7 @@ class Bot:
         self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
 
-        self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
+        self.mode = (0, 1, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
         self.default = (0,1,0,0)
 
     def before_turn(self, playerInfo):
@@ -106,11 +106,11 @@ class Bot:
                 if pos:
                     return self.move_to(gamemap, pos[0])
                 else:
-                    self.mode=(1,0,0,0)
+                    self.mode=(0,0,0,1)
                     return None
             else:
-                self.mode = (1,0,0,0)
-                return self.mine_nearest_resource(gamemap)
+
+                return self.go_home(gamemap)
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
         else:
@@ -133,7 +133,7 @@ class Bot:
         for i in range(len(self.moves)):
             tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
             if tile == TileContent.Wall or tile == TileContent.Player:
-                self.mode = (1,0,0,0)
+                #self.mode = (1,0,0,0
                 return create_attack_action(self.moves[i])
         return None
 

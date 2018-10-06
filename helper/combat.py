@@ -27,7 +27,7 @@ def evaluate_target(player, visiblePlayers):
     if possibilities:
         target = heapq.heappop(possibilities)
     else: return None
-    if not target or target.h > 50000:
+    if not target:
         return None
     return target.player
 
