@@ -64,12 +64,7 @@ class Bot:
                         return create_attack_action(self.moves[i])
                     if tile == TileContent.Wall:
                         return create_attack_action(self.moves[i])
-                dist = self.PlayerInfo.Position - self.PlayerInfo.HouseLocation
-                if dist.x != 0:
-                    return create_move_action(Point((1, -1)[dist.x < 0], 0)) 
-                if dist.y != 0:
-                    return create_move_action(Point(0, (1, -1)[dist.y < 0])) 
-                return create_move_action(self.moves[3])                
+                return go_home(gameMap)              
         except Exception as e:
             print(e)
 
