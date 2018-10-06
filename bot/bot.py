@@ -12,6 +12,18 @@ class Bot:
         """
         self.PlayerInfo = playerInfo
 
+    def hardcode_turn(self):
+        updown = 11
+        up = -1
+        rightleft = 3
+        right = 1
+        moves = []
+        for i in range(updown):
+            moves.append(Point(0, up))
+        for i in range(rightleft):
+            moves.append(Point(right, 0))
+        return moves
+
     def execute_turn(self, gameMap, visiblePlayers):
         """
         This is where you decide what action to take.
@@ -20,10 +32,13 @@ class Bot:
         """
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
-        return create_move_action(Point(-1, 0))
+        moves = hardcode_turn()
+        for move in moves:
+            return create_move_action(move)
 
     def after_turn(self):
         """
         Gets called after executeTurn
         """
         pass
+
