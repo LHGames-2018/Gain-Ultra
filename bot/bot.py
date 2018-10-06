@@ -103,7 +103,11 @@ class Bot:
             target = evaluate_target(self.PlayerInfo, visible)
             if target:
                 pos = find_empty_spot(gamemap,self.PlayerInfo, target.Position)
-                return self.move_to(gamemap, pos[0])
+                if pos:
+                    return self.move_to(gamemap, pos[0])
+                else:
+                    self.mode=(1,0,0,0)
+                    return None
             else:
                 mode = (1,0,0,0)
                 return self.mine_nearest_resource(gamemap)
