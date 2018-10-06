@@ -36,7 +36,7 @@ class Bot:
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
         try:
             for i in range(len(self.moves)):
-                tile = gameMap.getTileAt(self.PlayerInfo.position + self.moves[i])
+                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
                 if tile.TileContent == TileContent.Resource:
                     return create_collect_action(self.moves[i])
         except Exception as e:
