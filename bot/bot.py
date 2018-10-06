@@ -7,9 +7,9 @@ class Bot:
     def __init__(self):
         self.upgradeOrder = [ UpgradeType.CarryingCapacity, UpgradeType.CollectingSpeed, UpgradeType.AttackPower, UpgradeType.Defence, UpgradeType.MaximumHealth]
         self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
-        movement = self.hardcode_turn()
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
-        self.mode = (0, 0, 1, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
+        self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
+        self.default = (0,0,1,0)
 
     def before_turn(self, playerInfo):
         """
@@ -18,17 +18,6 @@ class Bot:
         """
         self.PlayerInfo = playerInfo
 
-    def hardcode_turn(self):
-        updown = 11
-        up = -1
-        rightleft = 3
-        right = 1
-        moves = []
-        for i in range(updown):
-            moves.append(Point(0, up))
-        for i in range(rightleft):
-            moves.append(Point(right, 0))
-        return moves
 
     def execute_turn(self, gameMap, visiblePlayers):
         """
@@ -38,7 +27,7 @@ class Bot:
         """
         print(self.mode)
         try:
-            action = self.do_decision(gameMap)
+            action= self.do_decision(gameMap)
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
             if not action:
@@ -47,6 +36,38 @@ class Bot:
         except Exception as e:
             print(e)
 
+        try:
+            if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
+                if self.PlayerInfo.TotalResources > 0:
+                    for i in range(len(self.upgradeOrder)):
+                        level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
+                        if self.PlayerInfo.TotalResources >= self.upgradePrices[level]:
+                            return create_upgrade_action(self.upgradeOrder[i])
+            if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
+                for i in range(len(self.moves)):
+                    tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+                    if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Wall:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Resource:
+                        return create_collect_action(self.moves[i])
+                    if tile == TileContent.House and (self.PlayerInfo.Position + self.moves[i]) != self.PlayerInfo.HouseLocation:
+                        return create_steal_action(self.moves[i])
+                return create_move_action(self.moves[1])
+            else:
+                for i in range(len(self.moves)):
+                    tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+                    if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Wall:
+                        return create_attack_action(self.moves[i])
+                return self.go_home(gameMap)              
+        except Exception as e:
+            print(e)
+
+
+
     def after_turn(self):
         """
         Gets called after executeTurn
@@ -54,10 +75,12 @@ class Bot:
         pass
 
     def do_decision(self, gamemap):
+
         if self.breakableNear(gamemap):
             return self.breakit(gamemap)
         if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
-            self.mode = (1,0,0,0)
+            self.mode = self.default
+
             if self.PlayerInfo.TotalResources > 0:
                 for i in range(len(self.upgradeOrder)):
                     level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
@@ -66,6 +89,8 @@ class Bot:
         if self.mode[3] == 1 or self.PlayerInfo.CarriedResources>=self.PlayerInfo.CarryingCapacity:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
+
+
             return self.mine_nearest_resource(gamemap)
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
@@ -89,20 +114,13 @@ class Bot:
         for i in range(len(self.moves)):
             tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
             if tile == TileContent.Wall or tile == TileContent.Player:
+                self.mode = (1,0,0,0)
                 return create_attack_action(self.moves[i])
         return None
 
-
     def mine_nearest_resource(self, gamemap):
-        res, dist = find_nearest_resource(gamemap, self.PlayerInfo)
-            return self.mine_nearest_resource(gamemap, 0)
-        else:
-            return None
 
-    def mine_nearest_resource(self, gamemap, index):
-        if index >= len(gamemap.resourceTiles):
-            return self.go_home(gamemap)
-        res, dist = find_nearest_resource(gamemap, self.PlayerInfo, index)
+        res, dist = find_nearest_resource(gamemap, self.PlayerInfo)
 
         if res:
             if dist == 1:
@@ -116,7 +134,9 @@ class Bot:
                 if emptyres:
                     return self.move_to(gamemap, emptyres)
                 else:
-                    return self.mine_nearest_resource(gamemap, index + 1)
+
+                    return self.go_home(gamemap)
+
         else:
             return self.go_home(gamemap)
 
@@ -132,5 +152,6 @@ class Bot:
             direction = next_tile - self.PlayerInfo.Position
             return create_move_action(direction)
         else:
-            return create_move_action(Point(0,1))
+            return None
+
 
