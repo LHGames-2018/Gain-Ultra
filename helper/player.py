@@ -1,3 +1,8 @@
+from helper.pathfinding import a_star
+from helper.aiHelper import *
+from helper.structs import *
+from helper.tile import *
+
 class Player:
     def __init__(self, health, maxHealth, carriedResources, carryingCapacity,
                  collectingSpeed, totalResources, attackPower, defence, position, houseLocation,
@@ -19,3 +24,11 @@ class Player:
 
     def getUpgradeLevel(self, type):
         return self.UpgradeLevels[type]
+
+    def move_to(self, gamemap, target):
+        path = a_star(gamemap, self, target)
+        if path:
+            next_tile = path.pop().position
+            direction = next_tile - self.Position
+            return create_move_action(direction)
+
