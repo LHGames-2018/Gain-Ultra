@@ -25,7 +25,10 @@ def evaluate_target(player, visiblePlayers):
                 h = (turns_to_kill/turns_to_get_killed) * -score_diff * distance
             heapq.heappush(possibilities, Enemy(enemy, h))
 
-    target = heapq.heappop(possibilities)
+    if possibilities:
+        target = heapq.heappop(possibilities)
+    else:
+        return None
     if not target or target.h > 50000:
         return None
     return target.player
@@ -34,4 +37,6 @@ def evaluate_target(player, visiblePlayers):
 def estimate_outcome(player, other):
     #loor(3 + attacker's power + offensive items - 2 * (defender's defence + defensive items) ^ 0.6 )
     attack_power = math.floor((3 + player.AttackPower) - (2 * (other.Defence**0.6)))
+    if attack_power ==0:
+        return 1000
     return math.ceil(other.Health / attack_power)

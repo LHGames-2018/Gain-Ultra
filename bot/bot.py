@@ -1,5 +1,5 @@
 from helper import *
-
+import traceback
 from random import randint
 
 from helper.combat import evaluate_target
@@ -38,7 +38,7 @@ class Bot:
                 action = create_move_action(self.moves[randint(0, 3)])
             return action
         except Exception as e:
-            print(e)
+            traceback.print_exc()
 
         try:
             if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
@@ -68,7 +68,7 @@ class Bot:
                         return create_attack_action(self.moves[i])
                 return self.go_home(gameMap)              
         except Exception as e:
-            print(e)
+            traceback.print_exc()
 
 
 
@@ -103,7 +103,10 @@ class Bot:
             target = evaluate_target(self.PlayerInfo, visible)
             if target:
                 pos = find_empty_spot(gamemap,self.PlayerInfo, target.Position)
-                return self.move_to(gamemap, pos[0])
+                if pos:
+                    return self.move_to(gamemap, pos[0])
+                else:
+                    return None
             else:
                 mode = (1,0,0,0)
                 return self.mine_nearest_resource(gamemap)
