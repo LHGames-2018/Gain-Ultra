@@ -33,17 +33,11 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
 
+
+
+        action = self.PlayerInfo.mine_nearest_resource(gameMap)
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
-        try:
-            for i in range(len(self.moves)):
-                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
-                if tile == TileContent.House and self.PlayerInfo.CarriedResources > 0:
-                    return create_move_action(self.moves[i])
-                if tile == TileContent.Resource and self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
-                    return create_collect_action(self.moves[i])
-        except Exception as e:
-            print(e)
-        return create_move_action(self.moves[randint(0, 3)])
+        return action
 
     def after_turn(self):
         """
