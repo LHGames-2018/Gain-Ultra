@@ -64,7 +64,7 @@ class Bot:
                         return create_attack_action(self.moves[i])
                     if tile == TileContent.Wall:
                         return create_attack_action(self.moves[i])
-                return go_home(gameMap)              
+                return self.go_home(gameMap)              
         except Exception as e:
             print(e)
 
