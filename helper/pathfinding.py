@@ -31,7 +31,7 @@ def a_star(gamemap, player, target):
     while pqueue:
         if len(pqueue) > 500:
             break
-        current = heapq.heappop(pqueue)
+        current = heapq.heappop(pqueue)[0]
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
             path = []
             while current.parent:
@@ -42,7 +42,7 @@ def a_star(gamemap, player, target):
         for node in enfants(current, gamemap):
             if node in visited:
                 continue
-            if node in pqueue:
+            if node in [item for item in pqueue if item[0] == node]:
                 if node.G > current.G + 1:
                     node.G = current.G + 1
                     node.parent = current
@@ -50,7 +50,7 @@ def a_star(gamemap, player, target):
                 node.G = current.G + 1
                 node.H = manhattan(current.position, target)
                 node.parent = current
-                heapq.heappush(pqueue, node)
+                heapq.heappush(pqueue, (node, node.G + node.H))
     return []
 
 
