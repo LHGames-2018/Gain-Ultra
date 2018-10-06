@@ -20,7 +20,7 @@ def manhattan(point1, point2):
 
 
 def a_star(gamemap, player, target):
-    while abs(target.x - player.Position.x) > 16 or abs(target.y - player.Position.y) > 16:
+    while abs(target.x - player.Position.x) > 8 or abs(target.y - player.Position.y) > 8:
         target.x = (target.x - player.Position.x) / 2 + player.Position.x
         target.y = (target.y - player.Position.y) / 2 + player.Position.y
     current = Node(player.Position)
@@ -29,7 +29,7 @@ def a_star(gamemap, player, target):
     openset.add(current)
 
     while openset:
-        if len(openset) > 1000:
+        if len(openset) > 500:
             break
         current = min(openset, key=lambda o: o.G + o.H)
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
@@ -61,7 +61,7 @@ def find_nearest_resource(gamemap, player):
     man = 0
     for tile in gamemap.resourceTiles:
         man = manhattan(player.Position, tile.Position)
-        if abs(player.Position.x - tile.Position.x) <= 16 and abs(player.Position.y - tile.Position.y) <= 16 and man < dist:
+        if man < dist:
             dist = man
             nearest_resource = tile
 
