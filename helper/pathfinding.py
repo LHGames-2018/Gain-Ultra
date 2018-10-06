@@ -57,11 +57,11 @@ def a_star(gamemap, player, target):
     return []
 
 
-def find_nearest_resource(gamemap, player):
+def find_nearest_resource(gamemap, player, index):
     dist = 1000000
     nearest_resource = None
     man = 0
-    for tile in gamemap.resourceTiles:
+    for tile in gamemap.resourceTiles[index:]:
         man = manhattan(player.Position, tile.Position)
         if man < dist:
             dist = man

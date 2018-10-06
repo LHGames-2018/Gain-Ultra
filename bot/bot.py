@@ -64,12 +64,14 @@ class Bot:
         if self.mode[3] == 1 or self.PlayerInfo.CarriedResources>=self.PlayerInfo.CarryingCapacity:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
-            return self.mine_nearest_resource(gamemap)
+            return self.mine_nearest_resource(gamemap, 0)
         else:
             return None
 
-    def mine_nearest_resource(self, gamemap):
-        res, dist = find_nearest_resource(gamemap, self.PlayerInfo)
+    def mine_nearest_resource(self, gamemap, index):
+        if index >= len(gamemap.resourceTiles):
+            return self.go_home(gamemap)
+        res, dist = find_nearest_resource(gamemap, self.PlayerInfo, index)
         if res:
             if dist == 1:
                 print("MINING")
@@ -82,7 +84,7 @@ class Bot:
                 if emptyres:
                     return self.move_to(gamemap, emptyres)
                 else:
-                    return self.go_home(gamemap)
+                    return self.mine_nearest_resource(gamemap, index + 1)
         else:
             return self.go_home(gamemap)
 
