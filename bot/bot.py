@@ -27,6 +27,37 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         print(self.mode)
+
+        try:
+            if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
+                if self.PlayerInfo.TotalResources > 0:
+                    for i in range(len(self.upgradeOrder)):
+                        level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
+                        if self.PlayerInfo.TotalResources >= self.upgradePrices[level]:
+                            return create_upgrade_action(self.upgradeOrder[i])
+            if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
+                for i in range(len(self.moves)):
+                    tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+                    if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Wall:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Resource:
+                        return create_collect_action(self.moves[i])
+                    if tile == TileContent.House:
+                        return create_steal_action(self.moves[i])
+                return create_move_action(self.moves[1])
+            else:
+                for i in range(len(self.moves)):
+                    tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+                    if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Wall:
+                        return create_attack_action(self.moves[i])
+                return self.go_home(gameMap)              
+        except Exception as e:
+            print(e)
+
         try:
             action= self.do_decision(gameMap)
 
@@ -36,28 +67,6 @@ class Bot:
             return action
         except Exception as e:
             print(e)
-        try:
-            if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
-                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[0])
-                if tile == TileContent.Wall:
-                    return create_attack_action(self.moves[0])
-                if tile == TileContent.Resource:
-                    return create_collect_action(self.moves[0])
-                if tile == TileContent.House:
-                    return create_steal_action(self.moves[0])
-                if tile == TileContent.Player:
-                    return create_attack_action(self.moves[0])
-                return create_move_action(self.moves[0])
-            else:
-                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[2])
-                if tile == TileContent.Resource:
-                    return create_collect_action(self.moves[2])
-                if tile == TileContent.Player:
-                    return create_attack_action(self.moves[2])
-                return create_move_action(self.moves[2])                
-        except Exception as e:
-            print(e)
-
 
     def after_turn(self):
         """
