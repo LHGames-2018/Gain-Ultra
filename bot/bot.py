@@ -38,6 +38,15 @@ class Bot:
         """
         print(self.mode)
         try:
+            action= self.do_decision(gameMap)
+
+        # Write your bot here. Use functions from aiHelper to instantiate your actions.
+            if not action:
+                action = create_move_action(self.moves[randint(0, 3)])
+            return action
+        except Exception as e:
+            print(e)
+        try:
             if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
                 tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[0])
                 if tile == TileContent.Wall:
@@ -58,15 +67,7 @@ class Bot:
                 return create_move_action(self.moves[2])                
         except Exception as e:
             print(e)
-        try:
-            action= self.do_decision(gameMap)
 
-        # Write your bot here. Use functions from aiHelper to instantiate your actions.
-            if not action:
-                action = create_move_action(self.moves[randint(0, 3)])
-            return action
-        except Exception as e:
-            print(e)
 
     def after_turn(self):
         """
