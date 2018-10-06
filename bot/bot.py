@@ -1,5 +1,5 @@
 from helper import *
-
+from random import randint
 
 class Bot:
 
