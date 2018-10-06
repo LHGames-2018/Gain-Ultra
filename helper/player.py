@@ -36,7 +36,7 @@ class Player:
 
     def go_home(self, gamemap):
         print("GOING HOME")
-        self.move_to(gamemap, self.HouseLocation)
+        return self.move_to(gamemap, self.HouseLocation)
 
     def mine_nearest_resource(self, gamemap):
         if self.CarriedResources < self.CarryingCapacity:
@@ -57,7 +57,7 @@ class Player:
             else:
                 return self.go_home(gamemap)
         else:
-            self.go_home(gamemap)
+            return self.go_home(gamemap)
 
 
 
