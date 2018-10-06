@@ -5,6 +5,7 @@ class Bot:
 
     def __init__(self):
         movement = self.hardcode_turn()
+        self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
 
     def before_turn(self, playerInfo):
         """
@@ -33,8 +34,11 @@ class Bot:
         """
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
-        move = self.movement.pop(0)
-        return create_move_action(move)
+        for i in range(len(self.moves)):
+            tile = gameMap.getTileAt(self.PlayerInfo.position + self.moves[i])
+            if tile.TileContent == TileContent.Resource:
+                return create_collect_action(self.moves[i])
+        return create_move_action(self.moves[randint(0, 3)])
 
     def after_turn(self):
         """
