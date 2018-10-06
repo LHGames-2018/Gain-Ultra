@@ -12,7 +12,7 @@ class Node:
 
 def enfants(current, gamemap):
     liens = [Point(current.position.x - 1, current.position.y), Point(current.position.x, current.position.y - 1), Point(current.position.x, current.position.y + 1), Point(current.position.x + 1, current.position.y)]
-    return [Node(lien) for lien in liens if (gamemap.getTileAt(lien).TileContent == TileContent.Empty or gamemap.getTileAt(lien).TileContent == TileContent.House)]
+    return [Node(lien) for lien in liens if (gamemap.getTileAt(lien) == TileContent.Empty or gamemap.getTileAt(lien) == TileContent.House)]
 
 
 def manhattan(point1, point2):
