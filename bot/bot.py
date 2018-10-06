@@ -54,7 +54,7 @@ class Bot:
                         return create_attack_action(self.moves[i])
                     if tile == TileContent.Resource:
                         return create_collect_action(self.moves[i])
-                    if tile == TileContent.House:
+                    if tile == TileContent.House and (self.PlayerInfo.Position + self.moves[i]) != self.PlayerInfo.HouseLocation:
                         return create_steal_action(self.moves[i])
                 return create_move_action(self.moves[1])
             else:
