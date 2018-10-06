@@ -33,7 +33,8 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         try:
-            action = self.PlayerInfo.mine_nearest_resource(gameMap)
+            action = self.PlayerInfo.do_decision(gameMap)
+
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
             return action
         except Exception as e:

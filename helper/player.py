@@ -21,6 +21,7 @@ class Player:
         self.Score = score
         self.Name = name
         self.UpgradeLevels = upgradeLevels
+        self.mode = (1,0,0,0) #onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
 
     def getUpgradeLevel(self, type):
         return self.UpgradeLevels[type]
@@ -36,28 +37,47 @@ class Player:
 
     def go_home(self, gamemap):
         print("GOING HOME")
+        self.mode = (0,0,0,1)
         return self.move_to(gamemap, self.HouseLocation)
 
+    def buy_upgrade(self):#TODO
+        return create_upgrade_action(UpgradeType.CarryingCapacity)
+
     def mine_nearest_resource(self, gamemap):
-        if self.CarriedResources < self.CarryingCapacity:
-            res, dist = find_nearest_resource(gamemap, self)
-            if res:
-                if dist == 1:
-                    print("MINING")
-                    print(str(self.CarriedResources))
-                    return create_collect_action(res.Position - self.Position)
-                else:
-                    #Call find empty spot here
-                    emptyres, emptydist = find_empty_spot(gamemap, self, res.Position)
-                    print("Trying to find empty spot to mine")
-                    if emptyres:
-                        return self.move_to(gamemap, emptyres)
-                    else:
-                        return self.go_home(gamemap)
+        res, dist = find_nearest_resource(gamemap, self)
+        if res:
+            if dist == 1:
+                print("MINING")
+                print(str(self.CarriedResources))
+                return create_collect_action(res.Position - self.Position)
             else:
-                return self.go_home(gamemap)
+                #Call find empty spot here
+                emptyres, emptydist = find_empty_spot(gamemap, self, res.Position)
+                print("Trying to find empty spot to mine")
+                if emptyres:
+                    return self.move_to(gamemap, emptyres)
+                else:
+                    return self.go_home(gamemap)
         else:
             return self.go_home(gamemap)
+
+
+    def do_decision(self, gamemap):
+        print("doing decisioin, mode =")
+        print(self.mode)
+        if self.Position == self.HouseLocation:
+            self.mode = (1,0,0,0)
+            if self.TotalResources >= 10000: #or other upgrade goal:
+                return self.buy_upgrade()
+        if self.mode[3]==1 or self.CarriedResources>=self.CarryingCapacity:
+            return self.go_home(gamemap)
+        elif self.mode[0]==1 :
+            return self.mine_nearest_resource(gamemap)
+        else:
+            return None
+
+
+
 
 
 
