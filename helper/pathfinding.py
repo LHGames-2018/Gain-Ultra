@@ -10,6 +10,9 @@ class Node:
         self.H = 0
         self.G = 0
 
+    def __lt__(self, other):
+        return self.H + self.G < other.H + other.G
+
 def enfants(current, gamemap):
     liens = [Point(current.position.x - 1, current.position.y), Point(current.position.x, current.position.y - 1), Point(current.position.x, current.position.y + 1), Point(current.position.x + 1, current.position.y)]
     return [Node(lien) for lien in liens if (gamemap.getTileAt(lien) == TileContent.Empty or gamemap.getTileAt(lien) == TileContent.House)]
@@ -26,12 +29,12 @@ def a_star(gamemap, player, target):
     current = Node(player.Position)
     visited = set()
     pqueue = []
-    heapq.heappush(pqueue, (current.G + current.H, current))
+    heapq.heappush(pqueue, current)
 
     while pqueue:
         if len(pqueue) > 500:
             break
-        current = heapq.heappop(pqueue)[1]
+        current = heapq.heappop(pqueue)
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
             path = []
             while current.parent:
@@ -42,7 +45,7 @@ def a_star(gamemap, player, target):
         for node in enfants(current, gamemap):
             if node in visited:
                 continue
-            if node in [item for item in pqueue if item[1] == node]:
+            if node in pqueue:
                 if node.G > current.G + 1:
                     node.G = current.G + 1
                     node.parent = current
@@ -50,7 +53,7 @@ def a_star(gamemap, player, target):
                 node.G = current.G + 1
                 node.H = manhattan(current.position, target)
                 node.parent = current
-                heapq.heappush(pqueue, (node.G + node.H, node))
+                heapq.heappush(pqueue, node)
     return []
 
 
