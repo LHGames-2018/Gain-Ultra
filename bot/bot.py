@@ -32,12 +32,12 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-
-
-
-        action = self.PlayerInfo.mine_nearest_resource(gameMap)
+        try:
+            action = self.PlayerInfo.mine_nearest_resource(gameMap)
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
-        return action
+            return action
+        except Exception as e:
+            print(e)
 
     def after_turn(self):
         """
