@@ -31,4 +31,6 @@ class Player:
             next_tile = path.pop().position
             direction = next_tile - self.Position
             return create_move_action(direction)
+        else:
+            return create_move_action(Point(0, 0))
 
