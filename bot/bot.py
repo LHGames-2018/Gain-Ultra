@@ -5,6 +5,8 @@ from random import randint
 class Bot:
 
     def __init__(self):
+        self.upgradeOrder = [ UpgradeType.CarryingCapacity, UpgradeType.CollectingSpeed, UpgradeType.AttackPower, UpgradeType.Defence, UpgradeType.MaximumHealth]
+        self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
         movement = self.hardcode_turn()
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
         self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
@@ -37,6 +39,7 @@ class Bot:
         print(self.mode)
         try:
             action= self.do_decision(gameMap)
+
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
             return action
         except Exception as e:
@@ -51,8 +54,11 @@ class Bot:
     def do_decision(self, gamemap):
         if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
             self.mode = (1,0,0,0)
-            #if self.TotalResources >= 10000: #or other upgrade goal:
-             #   return self.buy_upgrade()
+            if self.PlayerInfo.TotalResources > 0:
+                for i in range(len(self.upgradeOrder)):
+                    level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
+                    if self.PlayerInfo.TotalResources >= self.upgradePrices[level]:
+                        return create_upgrade_action(self.upgradeOrder[i])
         if self.mode[3] == 1 or self.PlayerInfo.CarriedResources>=self.PlayerInfo.CarryingCapacity:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
