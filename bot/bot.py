@@ -48,19 +48,21 @@ class Bot:
             if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
                 for i in range(len(self.moves)):
                     tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+                    if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
                     if tile == TileContent.Wall:
                         return create_attack_action(self.moves[i])
                     if tile == TileContent.Resource:
                         return create_collect_action(self.moves[i])
                     if tile == TileContent.House:
                         return create_steal_action(self.moves[i])
-                    if tile == TileContent.Player:
-                        return create_attack_action(self.moves[i])
                 return create_move_action(self.moves[1])
             else:
                 for i in range(len(self.moves)):
                     tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[i])
                     if tile == TileContent.Player:
+                        return create_attack_action(self.moves[i])
+                    if tile == TileContent.Wall:
                         return create_attack_action(self.moves[i])
                 dist = self.PlayerInfo.Position - self.PlayerInfo.HouseLocation
                 if dist.x != 0:
@@ -80,7 +82,7 @@ class Bot:
             return action
         except Exception as e:
             print(e)
-            
+
     def after_turn(self):
         """
         Gets called after executeTurn
