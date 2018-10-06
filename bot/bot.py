@@ -19,7 +19,9 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
 
-        action = self.PlayerInfo.move_to(gameMap, self.PlayerInfo.HouseLocation)
+
+
+        action = self.PlayerInfo.mine_nearest_resource(gameMap)
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
         return action
 

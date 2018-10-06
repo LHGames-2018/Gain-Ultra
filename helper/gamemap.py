@@ -6,8 +6,10 @@ class GameMap:
         self.xMin = xMin
         self.yMin = yMin
         self.wallsAreBreakable = wallsAreBreakable
+        self.resourceTiles = []
         self.deserializeMap(serializedMap)
         self.initMapSize()
+
 
     def getTileAt(self, position):
         if (position.x < self.xMin or position.x >= self.xMax or
@@ -46,6 +48,7 @@ class GameMap:
                         amount_left = int(infos[1])
                         density = float(infos[2])
                         self.tiles[i].append(ResourceTile(TileContent(int(infos[0])), x, y, amount_left, density))
+                        self.resourceTiles.append(self.tiles[i][-1])
                     else:
                         self.tiles[i].append(Tile(TileContent(int(infos[0])), x, y))
                 else:

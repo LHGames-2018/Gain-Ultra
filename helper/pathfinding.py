@@ -53,3 +53,29 @@ def a_star(gamemap, player, target):
                 node.parent = current
                 openset.add(node)
     return []
+
+
+def find_nearest_resource(gamemap, player):
+    dist = 1000000
+    nearest_resource = None
+    man = 0
+    for tile in gamemap.resourceTiles:
+        man = manhattan(player.Position, tile.Position)
+        if abs(player.Position.x - tile.Position.x) <= 8 and abs(player.Position.y - tile.Position.y) <= 8 and man < dist:
+            dist = man
+            nearest_resource = tile
+
+    return (nearest_resource, man)
+
+def find_empty_spot(gamemap, player, target):
+    dist = 1000000
+    ret = None
+    for i in range(target.x - 1, target.x + 1):
+        for j in range(target.y - 1, target.y + 1):
+            point = Point(i, j)
+            man = manhattan(player.Position, point)
+            if gamemap.getTileAt(point) == TileContent.Empty:
+                dist = man
+                ret = point
+    return (ret, dist)
+
