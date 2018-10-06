@@ -106,6 +106,7 @@ class Bot:
                 if pos:
                     return self.move_to(gamemap, pos[0])
                 else:
+                    self.mode=(1,0,0,0)
                     return None
             else:
                 mode = (1,0,0,0)
