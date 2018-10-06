@@ -38,9 +38,11 @@ class Bot:
         """
         print(self.mode)
         try:
-            action= self.do_decision(gameMap)
+            action = self.do_decision(gameMap)
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
+            if not action:
+                action = create_move_action(self.moves[randint(0, 3)])
             return action
         except Exception as e:
             print(e)
@@ -93,6 +95,15 @@ class Bot:
 
     def mine_nearest_resource(self, gamemap):
         res, dist = find_nearest_resource(gamemap, self.PlayerInfo)
+            return self.mine_nearest_resource(gamemap, 0)
+        else:
+            return None
+
+    def mine_nearest_resource(self, gamemap, index):
+        if index >= len(gamemap.resourceTiles):
+            return self.go_home(gamemap)
+        res, dist = find_nearest_resource(gamemap, self.PlayerInfo, index)
+
         if res:
             if dist == 1:
                 print("MINING")
@@ -105,7 +116,7 @@ class Bot:
                 if emptyres:
                     return self.move_to(gamemap, emptyres)
                 else:
-                    return self.go_home(gamemap)
+                    return self.mine_nearest_resource(gamemap, index + 1)
         else:
             return self.go_home(gamemap)
 
@@ -122,3 +133,4 @@ class Bot:
             return create_move_action(direction)
         else:
             return create_move_action(Point(0,1))
+
