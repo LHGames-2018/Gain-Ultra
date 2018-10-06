@@ -2,6 +2,9 @@ from helper import *
 
 from random import randint
 
+from helper.combat import evaluate_target
+
+
 class Bot:
 
     def __init__(self):
@@ -9,7 +12,7 @@ class Bot:
         self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
         self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
-        self.default = (0,0,1,0)
+        self.default = (0,1,0,0)
 
     def before_turn(self, playerInfo):
         """
@@ -27,7 +30,7 @@ class Bot:
         """
         print(self.mode)
         try:
-            action= self.do_decision(gameMap)
+            action= self.do_decision(gameMap, visiblePlayers)
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
             if not action:
@@ -74,7 +77,7 @@ class Bot:
         """
         pass
 
-    def do_decision(self, gamemap):
+    def do_decision(self, gamemap, visible):
 
         if self.breakableNear(gamemap):
             return self.breakit(gamemap)
@@ -89,9 +92,19 @@ class Bot:
         if self.mode[3] == 1 or self.PlayerInfo.CarriedResources>=self.PlayerInfo.CarryingCapacity:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
-
-
-            return self.mine_nearest_resource(gamemap)
+            random = randint(0,6)
+            if random == 0:
+                self.mode=(0,1,0,0)
+            else:
+                return self.mine_nearest_resource(gamemap)
+        if self.mode[1] == 1:
+            target = evaluate_target(self.PlayerInfo, visible)
+            if target:
+                pos = find_empty_spot(gamemap,self.PlayerInfo, target.Position)
+                return self.move_to(gamemap, pos[0])
+            else:
+                mode = (1,0,0,0)
+                return self.mine_nearest_resource(gamemap)
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
         else:

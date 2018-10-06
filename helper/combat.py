@@ -28,7 +28,7 @@ def evaluate_target(player, visiblePlayers):
     target = heapq.heappop(possibilities)
     if not target or target.h > 50000:
         return None
-    return target.enemy
+    return target.player
 
 
 def estimate_outcome(player, other):
