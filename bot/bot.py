@@ -38,7 +38,28 @@ class Bot:
         """
         print(self.mode)
         try:
-            action = self.do_decision(gameMap)
+            if self.PlayerInfo.CarriedResources < self.PlayerInfo.CarryingCapacity:
+                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[0])
+                if tile == TileContent.Wall:
+                    return create_attack_action(self.moves[0])
+                if tile == TileContent.Resource:
+                    return create_collect_action(self.moves[0])
+                if tile == TileContent.House:
+                    return create_steal_action(self.moves[0])
+                if tile == TileContent.Player:
+                    return create_attack_action(self.moves[0])
+                return create_move_action(self.moves[0])
+            else:
+                tile = gameMap.getTileAt(self.PlayerInfo.Position + self.moves[2])
+                if tile == TileContent.Resource:
+                    return create_collect_action(self.moves[2])
+                if tile == TileContent.Player:
+                    return create_attack_action(self.moves[2])
+                return create_move_action(self.moves[2])                
+        except Exception as e:
+            print(e)
+        try:
+            action= self.do_decision(gameMap)
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
             if not action:
