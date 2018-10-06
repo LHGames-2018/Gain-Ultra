@@ -29,6 +29,8 @@ def a_star(gamemap, player, target):
     openset.add(current)
 
     while openset:
+        if len(openset) > 1000:
+            break
         current = min(openset, key=lambda o: o.G + o.H)
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
             path = []
