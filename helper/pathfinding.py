@@ -23,7 +23,7 @@ def manhattan(point1, point2):
 
 
 def a_star(gamemap, player, target):
-    while abs(target.x - player.Position.x) > 10 or abs(target.y - player.Position.y) > 10:
+    while abs(target.x - player.Position.x) > 15 or abs(target.y - player.Position.y) > 15:
         target.x = (target.x - player.Position.x) / 2 + player.Position.x
         target.y = (target.y - player.Position.y) / 2 + player.Position.y
     current = Node(player.Position)
