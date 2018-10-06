@@ -8,7 +8,7 @@ class Bot:
         self.upgradeOrder = [ UpgradeType.CarryingCapacity, UpgradeType.CollectingSpeed, UpgradeType.AttackPower, UpgradeType.Defence, UpgradeType.MaximumHealth]
         self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
-        self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
+        self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is FIGHT MODE, third is STEAL AND BREAK, fourth is go home even if pack not full
         self.default = (0,0,1,0)
 
 
@@ -92,6 +92,8 @@ class Bot:
         elif self.mode[0] == 1 :
 
             return self.mine_nearest_resource(gamemap)
+        elif self.mode[1] == 1:
+            return None
         elif self.mode[2] == 1:
             return self.destructTree(gamemap)
         else:
@@ -99,7 +101,7 @@ class Bot:
 
 
     def destructTree(self, gamemap):
-        return create_move_action(Point(0,-1))
+        return create_move_action(Point(0, 1))
 
 
     def breakableNear(self, gamemap):
