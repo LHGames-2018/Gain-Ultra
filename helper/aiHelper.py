@@ -37,15 +37,16 @@ def create_steal_action(direction):
     """
     return _create_action("StealAction", direction)
 
-def create_upgrade_action(item):
+def create_upgrade_action(upgrade):
     """
-    Creates a upgrade action for the specified type. You need to be ON
-    your house for this action to succeed. If you are on any other
-    type of tile, the action will fail. You can only upgrade 5 times for one type
+    Creates an upgrade action the given upgradeType. You need to be ON
+    your house tile for this action to succeed. If you are on any other
+    type of tile, the action will fail.
         :param item: The type of upgrade.
     """
-    return _create_action("UpgradeAction", item)
-    
+    actionContent = ActionContent("UpgradeAction", upgrade)
+    return json.dumps(actionContent.__dict__)
+
 def create_heal_action():
     """
     Instanciates a heal action. The action will fail if you don't have
