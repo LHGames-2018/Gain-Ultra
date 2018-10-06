@@ -81,3 +81,14 @@ def find_empty_spot(gamemap, player, target):
                 ret = point
     return (ret, dist)
 
+def find_nearest_tree(gamemap, player):
+    dist = 1000000
+    nearest_resource = None
+    man = 0
+    for tile in gamemap.resourceTiles:
+        man = manhattan(player.Position, tile.Position)
+        if abs(player.Position.x - tile.Position.x) <= 8 and abs(player.Position.y - tile.Position.y) <= 8 and man < dist:
+            dist = man
+            nearest_resource = tile
+
+    return (nearest_resource, dist)

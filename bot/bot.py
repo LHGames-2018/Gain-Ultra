@@ -9,7 +9,7 @@ class Bot:
         self.upgradePrices = [10000, 15000,	25000, 50000, 100000]
         movement = self.hardcode_turn()
         self.moves = [Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)]
-        self.mode = (1, 0, 0, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
+        self.mode = (0, 0, 1, 0)  # onehot: first is collect resource, second is find shoppe, third is ATTACK RECKLESSLY, fourth is go home even if pack not full
 
     def before_turn(self, playerInfo):
         """
@@ -52,6 +52,8 @@ class Bot:
         pass
 
     def do_decision(self, gamemap):
+        if self.breakableNear(gamemap):
+            return self.breakit(gamemap)
         if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
             self.mode = (1,0,0,0)
             if self.PlayerInfo.TotalResources > 0:
@@ -63,8 +65,31 @@ class Bot:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
             return self.mine_nearest_resource(gamemap)
+        elif self.mode[2] == 1:
+            return self.destructTree(gamemap)
         else:
             return None
+
+
+    def destructTree(self, gamemap):
+        return create_move_action(Point(0,-1))
+
+
+    def breakableNear(self, gamemap):
+        for i in range(len(self.moves)):
+            tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+            if tile == TileContent.Wall or tile == TileContent.Player:
+                return True
+        else: return False
+
+
+    def breakit(self, gamemap):
+        for i in range(len(self.moves)):
+            tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
+            if tile == TileContent.Wall or tile == TileContent.Player:
+                return create_attack_action(self.moves[i])
+        return None
+
 
     def mine_nearest_resource(self, gamemap):
         res, dist = find_nearest_resource(gamemap, self.PlayerInfo)
@@ -87,7 +112,7 @@ class Bot:
     def go_home(self, gamemap):
         print("GOING HOME")
         self.mode=(0,0,0,1)
-        return (self.move_to(gamemap, self.PlayerInfo.HouseLocation))
+        return self.move_to(gamemap, self.PlayerInfo.HouseLocation)
 
     def move_to(self, gamemap, target):
         path = a_star(gamemap, self.PlayerInfo, target)
@@ -96,4 +121,4 @@ class Bot:
             direction = next_tile - self.PlayerInfo.Position
             return create_move_action(direction)
         else:
-            return self.go_home(gamemap)
+            return create_move_action(Point(0,1))
