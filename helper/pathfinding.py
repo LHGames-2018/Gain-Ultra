@@ -65,7 +65,7 @@ def find_nearest_resource(gamemap, player):
             dist = man
             nearest_resource = tile
 
-    return (nearest_resource, man)
+    return (nearest_resource, dist)
 
 def find_empty_spot(gamemap, player, target):
     dist = 1000000
