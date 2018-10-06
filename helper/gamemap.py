@@ -7,6 +7,7 @@ class GameMap:
         self.yMin = yMin
         self.wallsAreBreakable = wallsAreBreakable
         self.resourceTiles = []
+        self.treeTiles = []
         self.deserializeMap(serializedMap)
         self.initMapSize()
 
