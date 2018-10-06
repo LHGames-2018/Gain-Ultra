@@ -23,16 +23,16 @@ def manhattan(point1, point2):
 
 
 def a_star(gamemap, player, target):
-    while abs(target.x - player.Position.x) > 10 or abs(target.y - player.Position.y) > 10:
-        target.x = (target.x - player.Position.x) / 2 + player.Position.x
-        target.y = (target.y - player.Position.y) / 2 + player.Position.y
+    #while abs(target.x - player.Position.x) > 10 or abs(target.y - player.Position.y) > 10:
+    #    target.x = (target.x - player.Position.x) / 2 + player.Position.x
+    #    target.y = (target.y - player.Position.y) / 2 + player.Position.y
     current = Node(player.Position)
     visited = set()
     pqueue = []
     heapq.heappush(pqueue, current)
 
     while pqueue:
-        if len(pqueue) > 500:
+        if len(pqueue) > 5000:
             break
         current = heapq.heappop(pqueue)
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
@@ -63,7 +63,7 @@ def find_nearest_resource(gamemap, player):
     man = 0
     for tile in gamemap.resourceTiles:
         man = manhattan(player.Position, tile.Position)
-        if abs(player.Position.x - tile.Position.x) <= 8 and abs(player.Position.y - tile.Position.y) <= 8 and man < dist:
+        if man < dist:
             dist = man
             nearest_resource = tile
 
