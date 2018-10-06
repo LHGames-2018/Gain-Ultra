@@ -1,5 +1,6 @@
 from helper.structs import *
 from helper.tile import TileContent
+import heapq
 
 
 class Node:
@@ -8,7 +9,6 @@ class Node:
         self.position = position
         self.H = 0
         self.G = 0
-
 
 def enfants(current, gamemap):
     liens = [Point(current.position.x - 1, current.position.y), Point(current.position.x, current.position.y - 1), Point(current.position.x, current.position.y + 1), Point(current.position.x + 1, current.position.y)]
@@ -24,26 +24,25 @@ def a_star(gamemap, player, target):
         target.x = (target.x - player.Position.x) / 2 + player.Position.x
         target.y = (target.y - player.Position.y) / 2 + player.Position.y
     current = Node(player.Position)
-    closedset = set()
-    openset = set()
-    openset.add(current)
+    visited = set()
+    pqueue = []
+    heapq.heappush(pqueue, (current, current.G + current.H))
 
-    while openset:
-        if len(openset) > 500:
+    while pqueue:
+        if len(pqueue) > 500:
             break
-        current = min(openset, key=lambda o: o.G + o.H)
+        current = heapq.heappop(pqueue)[0]
         if current.position.x == target.x and current.position.y == target.y:  # Quand le but est trouve, on depile les cases trouvees
             path = []
             while current.parent:
                 path.append(current)
                 current = current.parent
             return path
-        openset.remove(current)
-        closedset.add(current)
+        visited.add(current)
         for node in enfants(current, gamemap):
-            if node in closedset:
+            if node in visited:
                 continue
-            if node in openset:
+            if node in [item for item in pqueue if item[0] == node]:
                 if node.G > current.G + 1:
                     node.G = current.G + 1
                     node.parent = current
@@ -51,7 +50,7 @@ def a_star(gamemap, player, target):
                 node.G = current.G + 1
                 node.H = manhattan(current.position, target)
                 node.parent = current
-                openset.add(node)
+                heapq.heappush(pqueue, (node, node.G + node.H))
     return []
 
 
@@ -61,7 +60,7 @@ def find_nearest_resource(gamemap, player):
     man = 0
     for tile in gamemap.resourceTiles:
         man = manhattan(player.Position, tile.Position)
-        if man < dist:
+        if abs(player.Position.x - tile.Position.x) <= 8 and abs(player.Position.y - tile.Position.y) <= 8 and man < dist:
             dist = man
             nearest_resource = tile
 
