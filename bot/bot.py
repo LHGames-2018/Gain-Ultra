@@ -79,7 +79,8 @@ class Bot:
         pass
 
     def do_decision(self, gamemap, visible):
-
+        for upgrade in self.upgradeOrder:
+            print("{}: {}".format(upgrade, self.PlayerInfo.getUpgradeLevel(upgrade)))
         if self.breakableNear(gamemap):
             return self.breakit(gamemap)
         if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
