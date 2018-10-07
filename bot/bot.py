@@ -85,11 +85,11 @@ class Bot:
         if self.PlayerInfo.Position == self.PlayerInfo.HouseLocation:
             self.mode = self.default
 
-            if self.PlayerInfo.TotalResources > 0:
-                for i in range(len(self.upgradeOrder)):
-                    level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
-                    if self.PlayerInfo.TotalResources >= self.upgradePrices[level]:
-                        return create_upgrade_action(self.upgradeOrder[i])
+            #if self.PlayerInfo.TotalResources > 0:
+             #   for i in range(len(self.upgradeOrder)):
+              #      level = self.PlayerInfo.getUpgradeLevel(self.upgradeOrder[i])
+               #     if self.PlayerInfo.TotalResources >= self.upgradePrices[level]:
+                #        return create_upgrade_action(self.upgradeOrder[i])
         if self.mode[3] == 1 or self.PlayerInfo.CarriedResources>=self.PlayerInfo.CarryingCapacity:
             return self.go_home(gamemap)
         elif self.mode[0] == 1 :
@@ -125,7 +125,7 @@ class Bot:
     def breakableNear(self, gamemap):
         for i in range(len(self.moves)):
             tile = gamemap.getTileAt(self.PlayerInfo.Position + self.moves[i])
-            if tile == TileContent.Wall or tile == TileContent.Player:
+            if tile == TileContent.Player:
                 return True
         else: return False
 
